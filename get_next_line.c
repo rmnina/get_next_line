@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:00:53 by jdufour           #+#    #+#             */
-/*   Updated: 2023/04/27 16:50:23 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/04/29 19:25:11 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,80 +14,94 @@
 
 #define BUFFER_SIZE 5
 
-char	*get_line(char *buf)
+char	*get_line(char *line)
 {
-	char *line;
     int i;
 
     i = 0;
-    line = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-    if (!(line))
-        return (NULL);
-    while (line[i - 1] != '\n')
-    {
-        line[i] = buf[i];
+    while (line[i] && line[i] != '\n')
         i++;
-    }
+    if (line[i] && line[i] == '\n')
+        i++;
     line[i] = '\0';
 	return (line);
 }
 
-char	*update_buffer(char *buf)
+
+char	*update_buffer(char *buf, char *line)
 {
 	int		i;
 	int		j;
-	char	*new_buf;
 
 	i = 0;
-	while (buf[i] && buf[i] != '\n')
+	while (line[i] && line[i] != '\n')
 		i++;
-	i++;
+	if (line[i] && line[i] == '\n')
+        i++;
 	j = 0;
-	while (buf[i])
-		new_buf[j++] = buf[i++];
-	new_buf[j] = '\0';
-	return (new_buf);
+	while (line[i])
+    {
+		buf[j] = line[i];
+        i++;
+        j++;
+    }
+	buf[j] = '\0';
+	return (buf);
 }
 
-char    *get_from_buffer(int fd, char *buf)
+char    *get_new_line(char *buf, char *line, int fd)
 {
-    char    *str;
-    int pos;
-
-    str = malloc(sizeof(char) * (BUFFER_SIZE + 1));
-    pos = 1;
-    while (!(ft_strchr(buf, '\n')) && pos != 0)
+   int bytes;
+    
+    bytes = 1;
+    line = ft_strjoin(line, buf);
+    while (!(ft_strchr(line, '\n')) && bytes != 0) 
     {
-        pos = read(fd, str, BUFFER_SIZE);
-        str[pos] = '\0';
-        buf = ft_strjoin(buf, str);
+        bytes = read(fd, buf, BUFFER_SIZE);
+        if (bytes == -1)
+            return (NULL);
+        buf[bytes] = '\0';
+        line = ft_strjoin(line, buf);
     }
-    free (str);
-    return (buf);
+    buf = update_buffer(buf, line);
+    line = get_line(line);
+    if (!line)
+    {
+        free (line);
+        return (NULL);
+    }
+    return (line);
 }
 
 char    *get_next_line(int fd)
 {
-    static char *buf;
+    static char buf[BUFFER_SIZE + 1];
     char *line;
 
-    buf = get_from_buffer(fd, buf);
-    printf("buf : %s\n", buf);
-    line = get_line(buf);
-    printf("line : %s\n", line);
-    buf = update_buffer(buf);
-    printf("new buf : %s\n", buf);
+    line = NULL;
+    if (fd == -1)
+        return (NULL);
+    if (read(fd, buf, 0) == -1)
+        return (NULL);
+    line = get_new_line(buf, line, fd);
+    if (line[0] == '\0')
+    {
+        free (line);
+        return (NULL);
+    }
     return (line);
 }
 
-int	main()
-{
-	int	fd = open("test.txt", O_RDONLY);
-	// char	*buf = get_buffer(fd);
-	char	*line = get_next_line(fd);
-	printf("line = %s\n", line);
-	// buf = get_buffer(fd);
-	line = get_next_line(fd);
-	printf("line = %s\n", line);
-	free (line);
-}
+// int	main()
+// {
+// 	int	fd = open("test.txt", O_RDONLY);
+// 	char	*line = NULL;
+//     while (1)
+//     {
+//         line = get_next_line(fd);
+//         if (line == NULL)
+//             break;
+// 	    printf("line = %s", line);
+// 	    free (line);
+//     }
+// }

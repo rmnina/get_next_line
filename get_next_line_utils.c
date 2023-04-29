@@ -6,7 +6,7 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 15:43:35 by jdufour           #+#    #+#             */
-/*   Updated: 2023/04/27 16:22:02 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/04/29 19:20:47 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int	ft_strlen(const char *str)
 	int	i;
 
 	i = 0;
-	while (str[i])
+	while (str && str[i])
 		i++;
 	return (i);
 }
@@ -69,7 +69,7 @@ char	*ft_strcat(char *dest, const char *src)
 	
 	i = 0;
 	size = ft_strlen(dest);
-	while (src[i])
+	while (src && src[i])
 	{
 		dest[size + i] = src[i];
 		i++;
@@ -79,7 +79,7 @@ char	*ft_strcat(char *dest, const char *src)
 	
 }
 
-char	*ft_strjoin(const char *s1, const char *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	int	size;
 	char	*cat;
@@ -90,5 +90,7 @@ char	*ft_strjoin(const char *s1, const char *s2)
 		return (NULL);
 	cat = ft_strcat(cat, s1);
 	cat = ft_strcat(cat, s2);
+	if (s1)
+		free (s1);
 	return (cat);
 }
