@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/26 14:00:53 by jdufour           #+#    #+#             */
-/*   Updated: 2023/04/29 20:03:34 by jdufour          ###   ########.fr       */
+/*   Created: 2023/04/29 19:38:38 by jdufour           #+#    #+#             */
+/*   Updated: 2023/04/29 20:20:25 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 #define BUFFER_SIZE 5
 
@@ -78,15 +78,13 @@ char    *get_new_line(char *buf, char *line, int fd)
 
 char    *get_next_line(int fd)
 {
-    static char buf[BUFFER_SIZE + 1];
+    static char buf[1024][BUFFER_SIZE + 1];
     char *line;
 
     line = NULL;
-    if (fd == -1)
+    if (fd < 0 || fd > 1024 || read(fd, buf[fd], 0) == -1)
         return (NULL);
-    if (read(fd, buf, 0) == -1)
-        return (NULL);
-    line = get_new_line(buf, line, fd);
+    line = get_new_line(buf[fd], line, fd);
     if (!line || line[0] == '\0')
     {
         free (line);
@@ -97,15 +95,22 @@ char    *get_next_line(int fd)
 
 // int	main()
 // {
-// 	int	fd = open("test.txt", O_RDONLY);
+// 	int	fd1 = open("test.txt", O_RDONLY);
+//     int fd2 = open("test2.txt", O_RDONLY);
 // 	char	*line = NULL;
-//     while (1)
+//     for (int i = 0 ; i < 10 ; i++)
 //     {
-//         line = get_next_line(fd);
+//         line = get_next_line(fd1);
 //         if (line == NULL)
 //             break;
-// 	    printf("line = %s", line);
-// 	    free (line);
+// 	    printf("line %d = %s", i, line);
+//         line = get_next_line(fd2);
+//         if (line == NULL)
+//             break;
+//         printf("line %d = %s", i, line);
+
 //     }
-//  close ("test.txt");
+//     free (line);
+//     close (fd1);
+//     close (fd2);
 // }
