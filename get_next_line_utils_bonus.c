@@ -6,12 +6,11 @@
 /*   By: jdufour <jdufour@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 15:43:35 by jdufour           #+#    #+#             */
-/*   Updated: 2023/04/29 19:44:08 by jdufour          ###   ########.fr       */
+/*   Updated: 2023/05/02 23:04:16 by jdufour          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
-
 
 char	*ft_strchr(const char *str, int c)
 {
@@ -31,25 +30,25 @@ char	*ft_strchr(const char *str, int c)
 	return (0);
 }
 
-void    *ft_calloc(size_t nmemb, size_t size)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-    void    *ptr;
-	size_t i;
-    char    *new_ptr;
+	void	*ptr;
+	size_t	i;
+	char	*new_ptr;
 
-    i = 0;
+	i = 0;
 	ptr = malloc(nmemb * size);
-    if (!(ptr))
-        return (NULL);
-    if ((nmemb * size) / size != nmemb)
+	if (!(ptr))
+		return (NULL);
+	if ((nmemb * size) / size != nmemb)
 		return (NULL);
 	new_ptr = ptr;
 	while (i < size)
-    {
-        new_ptr[i] = 0;
-        i++;
-    }
-    return (ptr);
+	{
+		new_ptr[i] = 0;
+		i++;
+	}
+	return (ptr);
 }
 
 int	ft_strlen(const char *str)
@@ -66,7 +65,7 @@ char	*ft_strcat(char *dest, const char *src)
 {
 	int	i;
 	int	size;
-	
+
 	i = 0;
 	size = ft_strlen(dest);
 	while (src && src[i])
@@ -76,14 +75,13 @@ char	*ft_strcat(char *dest, const char *src)
 	}
 	dest[size + i] = '\0';
 	return (dest);
-	
 }
 
 char	*ft_strjoin(char *s1, char *s2)
 {
-	int	size;
+	int		size;
 	char	*cat;
-	
+
 	size = ft_strlen(s1) + ft_strlen(s2);
 	cat = ft_calloc(size + 1, sizeof(char));
 	if (!(cat))
