@@ -12,8 +12,6 @@
 
 #include "get_next_line.h"
 
-#define BUFFER_SIZE 5
-
 char	*get_line(char *line)
 {
 	int	i;
